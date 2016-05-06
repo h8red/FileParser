@@ -30,37 +30,48 @@ namespace FileParser
             List<User> userList = new List<User>();
 
             // read in the pipe
-            MyParser pPipe = new MyParser(new PipeParser(), args[0]);
-            userList.AddRange(pPipe.myUsers);
+            try
+            {
+                MyParser pPipe = new MyParser(new PipeParser(), Util.ReadStringFromFile(args[0]));
+                userList.AddRange(pPipe.myUsers);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine("An exception was thrown trying to parse the PIPE file: {0}", ex.Message);
+            }
 
             // read in the CSV
-            MyParser pCSV = new MyParser(new CSVParser(), args[1]);
-            userList.AddRange(pCSV.myUsers);
+            try
+            {
+                MyParser pCSV = new MyParser(new CSVParser(), Util.ReadStringFromFile(args[1]));
+                userList.AddRange(pCSV.myUsers);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine("An exception was thrown trying to parse the CSV file: {0}", ex.Message);
+            }
 
             // read in the spaced        
-            MyParser pSpace = new MyParser(new SpaceParser(), args[2]);
-            userList.AddRange(pSpace.myUsers);
-
-
+            try
+            {
+                MyParser pSpace = new MyParser(new SpaceParser(), Util.ReadStringFromFile(args[2]));
+                userList.AddRange(pSpace.myUsers);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine("An exception was thrown trying to parse the SPACED file: {0}", ex.Message);
+            }
+            
             Console.WriteLine("\r\nOutput 1. Gender (female -> male), LastName ascending\r\n");
             // write the output for Gender (female->male), last asc
-            Util.OutputUsers((from rows in userList
-                             orderby rows.Gender ascending, rows.LastName ascending
-                             select rows).ToList());
-
-            Console.WriteLine("\r\nOutput 2. DOB ascending\r\n");
-            // write the output for birthdate, asc
-            Util.OutputUsers((from rows in userList
-                              orderby rows.DOB ascending
-                              select rows).ToList());
-
-            Console.WriteLine("\r\nOutput 3. LastName descending\r\n");
-            // write the output for last name, desc
-            Util.OutputUsers((from rows in userList
-                              orderby rows.LastName descending
-                              select rows).ToList());
+            Util.OutputUsers(Util.OutputByGender(userList));            
             
-
+            Console.WriteLine("\r\nOutput 2. DOB ascending\r\n");
+            Util.OutputUsers(Util.OutputByDob(userList));
+            
+            Console.WriteLine("\r\nOutput 3. LastName descending\r\n");
+            Util.OutputUsers(Util.OutputByLastName(userList));
+            
             Console.WriteLine("\r\nPress enter to exit...");
             Console.ReadLine();
         }
