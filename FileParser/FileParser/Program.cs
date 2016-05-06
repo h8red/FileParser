@@ -26,26 +26,46 @@ namespace FileParser
                 //return;
             }
 
+            // list of all our users we read in from the different files
             List<User> userList = new List<User>();
 
+            // read in the pipe
             MyParser pPipe = new MyParser(new PipeParser(), args[0]);
             userList.AddRange(pPipe.myUsers);
 
+            // read in the CSV
             MyParser pCSV = new MyParser(new CSVParser(), args[1]);
             userList.AddRange(pCSV.myUsers);
 
+            // read in the spaced        
             MyParser pSpace = new MyParser(new SpaceParser(), args[2]);
             userList.AddRange(pSpace.myUsers);
 
-            Console.WriteLine("Number of users found: {0}", userList.Count);
-            foreach(User u in userList)
-            {
-                Console.WriteLine("{0} {1} {2} {3} {4}", u.LastName, u.FirstName, u.Gender, u.FavoriteColor, u.getFormattedDob());
-            }
 
+            Console.WriteLine("\r\nOutput 1. Gender (female -> male), LastName ascending\r\n");
+            // write the output for Gender (female->male), last asc
+            Util.OutputUsers((from rows in userList
+                             orderby rows.Gender ascending, rows.LastName ascending
+                             select rows).ToList());
 
-            Console.WriteLine("Press enter to exit...");
+            Console.WriteLine("\r\nOutput 2. DOB ascending\r\n");
+            // write the output for birthdate, asc
+            Util.OutputUsers((from rows in userList
+                              orderby rows.DOB ascending
+                              select rows).ToList());
+
+            Console.WriteLine("\r\nOutput 3. LastName descending\r\n");
+            // write the output for last name, desc
+            Util.OutputUsers((from rows in userList
+                              orderby rows.LastName descending
+                              select rows).ToList());
+            
+
+            Console.WriteLine("\r\nPress enter to exit...");
             Console.ReadLine();
         }
+
+        
+
     }
 }

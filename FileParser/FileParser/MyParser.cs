@@ -14,20 +14,15 @@ namespace FileParser
         {
             myUsers = new List<User>();
             myUsers.AddRange(parser.ParseFile(fileName));
-        }
-
-        public bool SaveInfoToDb()
-        {
-            Console.WriteLine("****SaveInfoToDb called****\r\n");
-            return true;
-        }
+        }        
     }
 
     public interface IParser
-    {        
+    {
         List<User> ParseFile(string fileName);
     }
 
+    // Pipe interface
     public class PipeParser : IParser
     {
         public List<User> ParseFile(string fileName)
@@ -38,7 +33,7 @@ namespace FileParser
             {
                 string line;
 
-                while((line = file.ReadLine()) != null)
+                while ((line = file.ReadLine()) != null)
                 {
                     string[] userTokens = line.Split('|');
 
@@ -50,7 +45,7 @@ namespace FileParser
                         Gender = Convert.ToString(userTokens[2]),
                         FavoriteColor = Convert.ToString(userTokens[3]),
                         DOB = Convert.ToDateTime(userTokens[4])
-                    });                    
+                    });
                 }
             }
 
@@ -60,6 +55,7 @@ namespace FileParser
         }
     }
 
+    // CSV Interface
     public class CSVParser : IParser
     {
         public List<User> ParseFile(string fileName)
@@ -91,7 +87,7 @@ namespace FileParser
             return userList;
         }
     }
-
+    // Space Interface
     public class SpaceParser : IParser
     {
         public List<User> ParseFile(string fileName)
@@ -121,5 +117,5 @@ namespace FileParser
             Console.WriteLine(string.Format("SPACE ParseFile called on file {0}", fileName));
             return userList;
         }
-    }
+    }    
 }
